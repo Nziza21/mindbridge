@@ -6,6 +6,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/authRoutes');
 const moodRoutes = require('./routes/moodRoutes');
+const journalRoutes = require('./routes/journalRoutes');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/mood', moodRoutes);
+app.use('/api/journal', journalRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'MindBridge API running' });
