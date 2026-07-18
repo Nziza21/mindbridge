@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const errorHandler = require('./middleware/errorHandler');
+
 
 const authRoutes = require('./routes/authRoutes');
 const moodRoutes = require('./routes/moodRoutes');
@@ -16,6 +18,8 @@ app.use('/api/mood', moodRoutes);
 app.get('/', (req, res) => {
   res.json({ message: 'MindBridge API running' });
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
