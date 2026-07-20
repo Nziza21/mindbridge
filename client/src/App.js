@@ -1,18 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-
-function Dashboard() {
-  const { user, logout } = useAuth();
-  return (
-    <div>
-      <h2>Welcome, {user?.name}</h2>
-      <p>Role: {user?.role}</p>
-      <button onClick={logout}>Log out</button>
-    </div>
-  );
-}
+import Dashboard from "./pages/Dashboard";
+import MoodCheckIn from "./pages/MoodCheckIn";
+import Journal from "./pages/Journal";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -24,7 +17,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route
@@ -35,6 +28,23 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/mood-checkin"
+            element={
+              <PrivateRoute>
+                <MoodCheckIn />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/journal"
+            element={
+              <PrivateRoute>
+                <Journal />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
