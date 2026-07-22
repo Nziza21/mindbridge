@@ -18,4 +18,10 @@ api.interceptors.request.use((config) => {
 export const registerUser = (data) => api.post("/auth/register", data);
 export const loginUser = (data) => api.post("/auth/login", data);
 
+// Journal entries
+// entryData: { title, content, mood_id } — user_id comes from the JWT server-side
+export const createJournalEntry = (entryData) => api.post("/journal", entryData);
+export const getJournalEntries = (userId) => api.get(`/journal/${userId}`);
+export const deleteJournalEntry = (journalId) => api.delete(`/journal/${journalId}`);
+
 export default api;
