@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import MoodCheckIn from "./pages/MoodCheckIn";
 import Journal from "./pages/Journal";
+import Navbar from "./components/Navbar";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -16,6 +17,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
