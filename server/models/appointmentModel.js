@@ -5,15 +5,27 @@ const createAppointment = (user_id, counselor_id, appointment_date, notes, callb
   db.query(sql, [user_id, counselor_id, appointment_date, notes], callback);
 };
 
+// Student's own booked appointments
 const getAppointmentsByUser = (user_id, callback) => {
-  const sql = `
-    SELECT a.*, c.name AS counselor_name, c.specialty
-    FROM appointments a
-    JOIN counselors c ON a.counselor_id = c.counselor_id
-    WHERE a.user_id = ?
-    ORDER BY a.appointment_date DESC
-  `;
+  const sql = 'SELECT * FROM appointments WHERE user_id = ? ORDER BY appointment_date DESC';
   db.query(sql, [user_id], callback);
 };
 
-module.exports = { createAppointment, getAppointmentsByUser };
+// Counselor's incoming appointments
+const getAppointmentsByCounselor = (counselor_id, callback) => {
+  const sql = 'SELECT * FROM appointments WHERE counselor_id = ? ORDER BY appointment_date ASC';
+  db.query(sql, [counselor_id], callback);
+};
+
+// status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+const updateAppointmentStatus = (appointment_id, status, callback) => {
+  const sql = 'UPDATE appointments SET status = ? WHERE appointment_id = ?';
+  db.query(sql, [status, appointment_id], callback);
+};
+
+module.exports = {
+  createAppointment,
+  getAppointmentsByUser,
+  getAppointmentsByCounselor,
+  updateAppointmentStatus,
+};
