@@ -6,7 +6,7 @@ const createFeedback = (user_id, rating, comments, callback) => {
 };
 
 const getAllFeedback = (callback) => {
-  const sql = 'SELECT * FROM feedback ORDER BY date DESC';
+  const sql = 'SELECT * FROM feedback ORDER BY created_at DESC';
   db.query(sql, callback);
 };
 
