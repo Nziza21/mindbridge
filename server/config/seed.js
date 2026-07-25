@@ -1,6 +1,6 @@
 // server/config/seed.js
-// Creates counselors, resources, mood_entries, and journal tables (if they
-// don't exist yet) and fills them with sample data.
+// Creates counselors, resources, mood_entries, journal, and appointments
+// tables (if they don't exist yet) and fills them with sample data.
 // Run from the server/ folder with: node config/seed.js
 //
 // NOTE: mood_entries and journal both reference user_id. Since the `users`
@@ -61,6 +61,18 @@ const createJournalTable = `
   )
 `;
 
+const createAppointmentsTable = `
+  CREATE TABLE IF NOT EXISTS appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    counselor_id INT NOT NULL,
+    appointment_date DATETIME NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+`;
+
 const counselors = [
   ['Dr. Aline Uwase', 'aline.uwase@mindbridge.com', 'Anxiety & Stress', 'Specializes in helping students manage academic stress and anxiety.'],
   ['Dr. Eric Mugisha', 'eric.mugisha@mindbridge.com', 'Depression', 'Focuses on mood disorders and building healthy coping strategies.'],
@@ -112,7 +124,12 @@ function run() {
         db.query(createJournalTable, (err) => {
           if (err) return fail('creating journal table', err);
           console.log('journal table ready');
-          insertCounselors();
+
+          db.query(createAppointmentsTable, (err) => {
+            if (err) return fail('creating appointments table', err);
+            console.log('appointments table ready');
+            insertCounselors();
+          });
         });
       });
     });
