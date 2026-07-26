@@ -7,13 +7,35 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (!user) return null;
+  const PUBLIC_PATHS = ["/", "/login", "/register"];
 
-  const links = [
+  if (!user || PUBLIC_PATHS.includes(location.pathname)) return null;
+
+  const studentLinks = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Mood", path: "/mood-checkin" },
     { label: "Journal", path: "/journal" },
+    { label: "Resources", path: "/resources" },
+    { label: "Appointments", path: "/appointments" },
+    { label: "Feedback", path: "/feedback" },
   ];
+
+  const counselorLinks = [
+    { label: "Counselor Dashboard", path: "/counselor-dashboard" },
+    { label: "Resources", path: "/resources" },
+  ];
+
+  const adminLinks = [
+    { label: "Admin Dashboard", path: "/admin" },
+    { label: "Resources", path: "/resources" },
+  ];
+
+  const links =
+    user.role === "counselor"
+      ? counselorLinks
+      : user.role === "admin"
+      ? adminLinks
+      : studentLinks;
 
   return (
     <nav className="flex justify-between items-center px-12 py-5 bg-cream border-b border-mist">

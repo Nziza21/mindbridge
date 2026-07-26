@@ -40,15 +40,20 @@ export default function Appointments() {
 
     setSubmitting(true);
     try {
-      const res = await api.post("/appointment", {
-        student_id: user.id,
+      // user_id is read from the JWT server-side, not sent here.
+      // Backend expects appointment_date, not date.
+      await api.post("/appointments", {
         counselor_id: selectedCounselor,
-        date,
+        appointment_date: date,
+        notes: "",
       });
-      setAppointments((prev) => [...prev, res.data]);
       setSuccess("Appointment request submitted");
       setSelectedCounselor("");
       setDate("");
+      // POST only returns a success message, not the created row,
+      // so re-fetch to get the real appointment.
+      const res = await api.get(`/appointments/${user.id}`);
+      setAppointments(res.data);
     } catch (err) {
       setError(err.response?.data?.message || "Could not book appointment");
     } finally {
@@ -80,7 +85,7 @@ export default function Appointments() {
             <option value="">Select a counselor</option>
             {counselors.map((c) => (
               <option key={c.counselor_id} value={c.counselor_id}>
-                {c.name} — {c.specialization}
+                {c.name} — {c.specialty}
               </option>
             ))}
           </select>
@@ -120,7 +125,7 @@ export default function Appointments() {
             className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
           >
             <p className="font-medium text-gray-800">{c.name}</p>
-            <p className="text-sm text-gray-500">{c.specialization}</p>
+            <p className="text-sm text-gray-500">{c.specialty}</p>
           </div>
         ))}
       </div>
@@ -138,7 +143,7 @@ export default function Appointments() {
             className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm flex justify-between items-center"
           >
             <span className="text-gray-700">
-              {new Date(a.date).toLocaleDateString()}
+              {new Date(a.appointment_date).toLocaleDateString()}
             </span>
             <span className="text-xs font-medium px-2 py-1 rounded-full bg-blue-100 text-blue-700">
               {a.status}

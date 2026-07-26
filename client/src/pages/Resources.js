@@ -66,7 +66,7 @@ export default function Resources() {
             <h3 className="font-semibold text-gray-800 mb-1">{r.title}</h3>
             <p className="text-sm text-gray-500 mb-3">{r.description}</p>
             {r.url && (
-              
+              <a
                 href={r.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -80,4 +80,4 @@ export default function Resources() {
       </div>
     </div>
   );
-}
+} 

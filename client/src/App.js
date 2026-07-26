@@ -6,13 +6,25 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import MoodCheckIn from "./pages/MoodCheckIn";
 import Journal from "./pages/Journal";
+import Resources from "./pages/Resources";
+import Appointments from "./pages/Appointments";
+import Feedback from "./pages/Feedback";
+import CounselorDashboard from "./pages/CounselorDashboard";
 import Navbar from "./components/Navbar";
 import AdminDashboard from "./pages/AdminDashboard";
 
-function PrivateRoute({ children, role }) {
+function homeForRole(role) {
+  if (role === "counselor") return "/counselor-dashboard";
+  if (role === "admin") return "/admin";
+  return "/dashboard";
+}
+
+function PrivateRoute({ children, roles }) {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" />;
-  if (role && user.role !== role) return <Navigate to="/dashboard" />;
+  if (roles && !roles.includes(user.role)) {
+    return <Navigate to={homeForRole(user.role)} />;
+  }
   return children;
 }
 
@@ -28,7 +40,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={["student"]}>
                 <Dashboard />
               </PrivateRoute>
             }
@@ -36,7 +48,7 @@ function App() {
           <Route
             path="/mood-checkin"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={["student"]}>
                 <MoodCheckIn />
               </PrivateRoute>
             }
@@ -44,15 +56,47 @@ function App() {
           <Route
             path="/journal"
             element={
-              <PrivateRoute>
+              <PrivateRoute roles={["student"]}>
                 <Journal />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/resources"
+            element={
+              <PrivateRoute>
+                <Resources />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <PrivateRoute roles={["student"]}>
+                <Appointments />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <PrivateRoute roles={["student"]}>
+                <Feedback />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/counselor-dashboard"
+            element={
+              <PrivateRoute roles={["counselor"]}>
+                <CounselorDashboard />
               </PrivateRoute>
             }
           />
 	  <Route
             path="/admin"
             element={
-              <PrivateRoute role="admin">
+              <PrivateRoute roles={["admin"]}>
                 <AdminDashboard />
               </PrivateRoute>
             }
