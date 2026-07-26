@@ -11,10 +11,24 @@ const register = (req, res) => {
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
+    const userRole = role || 'student';
 
-    createUser(name, email, hashedPassword, role || 'student', country, (err, result) => {
+    createUser(name, email, hashedPassword, userRole, country, (err, result) => {
       if (err) return res.status(500).json({ message: 'Server error' });
-      res.status(201).json({ message: 'User registered successfully' });
+
+      // Log the user in immediately, matching login()'s response shape
+      // — AuthContext.register() expects res.data.token/res.data.user.
+      const token = jwt.sign(
+        { id: result.insertId, role: userRole },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+      );
+
+      res.status(201).json({
+        message: 'User registered successfully',
+        token,
+        user: { id: result.insertId, name, role: userRole, email },
+      });
     });
   });
 };
@@ -40,7 +54,7 @@ const login = (req, res) => {
       { expiresIn: '1d' }
     );
 
-    res.json({ token, user: { id: user.user_id, name: user.name, role: user.role } });
+    res.json({ token, user: { id: user.user_id, name: user.name, role: user.role, email: user.email } });
   });
 };
 

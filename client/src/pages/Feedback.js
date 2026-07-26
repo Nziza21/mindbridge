@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 
 export default function Feedback() {
-  const { user } = useAuth();
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
@@ -17,10 +15,11 @@ export default function Feedback() {
     setSubmitting(true);
 
     try {
+      // user_id is read from the JWT server-side, and the backend field
+      // is "comments" (plural), not "comment".
       await api.post("/feedback", {
-        user_id: user.id,
         rating,
-        comment,
+        comments: comment,
       });
       setSuccess("Thank you for your feedback!");
       setRating(5);
