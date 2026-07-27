@@ -10,6 +10,9 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 const counselorRoutes = require('./routes/counselorRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const app = express();
+const adminRoutes = require('./routes/adminRoutes');
+
+
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
@@ -19,6 +22,8 @@ app.use('/api/resources', resourceRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/counselors', counselorRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/admin', adminRoutes);
+
 app.get('/', (req, res) => {
   res.json({ message: 'MindBridge API running' });
 });
