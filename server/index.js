@@ -13,7 +13,10 @@ const app = express();
 const adminRoutes = require('./routes/adminRoutes');
 
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://mindbridge-navy-tau.vercel.app', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/mood', moodRoutes);
