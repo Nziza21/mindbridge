@@ -175,6 +175,10 @@ async function run() {
     const journalEntries = buildJournalEntries(moodResult.insertId);
     await query('INSERT INTO journal (user_id, title, content, mood_id) VALUES ?', [journalEntries]);
     console.log(`Inserted ${journalEntries.length} journal entries`);
+    
+    const bcrypt = require('bcryptjs');
+    const adminPassword = bcrypt.hashSync('admin123', 10);
+    await query('INSERT IGNORE INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', ['Admin', 'admin@mindbridge.com', adminPassword, 'admin']); 
 
     console.log('Seed complete');
   } catch (err) {

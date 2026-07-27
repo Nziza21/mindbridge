@@ -14,7 +14,9 @@ export default function AdminDashboard() {
   const [formError, setFormError] = useState("");
 
   const fetchData = () => {
-    Promise.all([api.get("/counselors"), api.get("/feedback")])
+    const token = localStorage.getItem("token");
+const config = { headers: { Authorization: `Bearer ${token}` } };
+Promise.all([api.get("/counselors", config), api.get("/feedback", config)])
       .then(([counselorRes, feedbackRes]) => {
         setCounselors(counselorRes.data);
         setFeedback(feedbackRes.data);
