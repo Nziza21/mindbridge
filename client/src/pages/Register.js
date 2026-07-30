@@ -9,7 +9,7 @@ function Register() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const countryOptions = getData().map((c) => ({ value: c.name, label: c.name }));
+  const countryOptions = (getData() || []).map((c) => ({ value: c.name, label: c.name }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
