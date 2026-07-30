@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import Select from "react-select";
 import { getData } from "country-list";
 
 function Register() {
@@ -9,7 +8,7 @@ function Register() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const countryOptions = (getData() || []).map((c) => ({ value: c.name, label: c.name }));
+  const countries = (getData() || []).map((c) => c.name);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +24,6 @@ function Register() {
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center px-6">
       <div className="w-full max-w-md">
-
         <p className="text-sage text-sm font-medium tracking-widest uppercase mb-2">Get started</p>
         <h1 className="font-serif text-4xl text-forest mb-10">Create your account</h1>
 
@@ -54,23 +52,16 @@ function Register() {
             className="bg-mist rounded-xl px-5 py-4 text-forest text-sm placeholder-sand outline-none focus:ring-2 focus:ring-sage"
           />
 
-          <Select
-            options={countryOptions}
-            onChange={(selected) => setForm({ ...form, country: selected?.value || "" })}
-            placeholder="Country of origin"
-            styles={{
-              control: (base) => ({
-                ...base,
-                background: "#E8EDE9",
-                border: "none",
-                borderRadius: "12px",
-                padding: "8px 8px",
-                boxShadow: "none",
-              }),
-              placeholder: (base) => ({ ...base, color: "#C8B89A", fontSize: "14px" }),
-              singleValue: (base) => ({ ...base, color: "#1C2B1E", fontSize: "14px" }),
-            }}
-          />
+          <select
+            value={form.country}
+            onChange={(e) => setForm({ ...form, country: e.target.value })}
+            className="bg-mist rounded-xl px-5 py-4 text-forest text-sm outline-none focus:ring-2 focus:ring-sage"
+          >
+            <option value="">Country of origin</option>
+            {countries.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
@@ -91,7 +82,6 @@ function Register() {
             Log in here
           </span>
         </p>
-
       </div>
     </div>
   );
